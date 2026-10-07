@@ -1,0 +1,30 @@
+---
+- name: Manage LEMP Platform Services
+  hosts: lemp
+  become: true
+  gather_facts: false
+
+  tasks:
+
+    - name: Ensure Nginx is enabled and running
+      ansible.builtin.systemd:
+        name: "{{ nginx_service }}"
+        enabled: true
+        state: started
+
+    - name: Ensure PHP-FPM is enabled and running
+      ansible.builtin.systemd:
+        name: "{{ php_fpm_service }}"
+        enabled: true
+        state: started
+
+    - name: Ensure MariaDB is enabled and running
+      ansible.builtin.systemd:
+        name: "{{ database_service }}"
+        enabled: true
+        state: started
+
+    - name: Verify application is responding
+      ansible.builtin.uri:
+        url: "{{ application_url }}"
+        status_code: 200

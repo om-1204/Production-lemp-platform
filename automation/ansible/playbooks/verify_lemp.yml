@@ -1,0 +1,39 @@
+---
+- name: Verify LEMP Platform Services
+  hosts: lemp
+  become: true
+  gather_facts: true
+
+  tasks:
+
+    - name: Check Nginx service
+      ansible.builtin.systemd:
+        name: nginx
+      register: nginx_status
+
+    - name: Check PHP-FPM service
+      ansible.builtin.systemd:
+        name: php8.3-fpm
+      register: php_status
+
+    - name: Check MariaDB service
+      ansible.builtin.systemd:
+        name: mariadb
+      register: mariadb_status
+
+    - name: Display service status
+      ansible.builtin.debug:
+        msg:
+          - "Nginx: {{ nginx_status.status.ActiveState }}"
+          - "PHP-FPM: {{ php_status.status.ActiveState }}"
+          - "MariaDB: {{ mariadb_status.status.ActiveState }}"
+
+    - name: Verify application response
+      ansible.builtin.uri:
+        url: http://localhost/
+        status_code: 200
+      register: application_check
+
+    - name: Display application status
+      ansible.builtin.debug:
+        msg: "Application HTTP status: {{ application_check.status }}"

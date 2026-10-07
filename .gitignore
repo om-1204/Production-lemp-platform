@@ -1,0 +1,34 @@
+# Backups
+backups/
+
+# Runtime evidence and generated logs
+evidence/
+
+# Local environment/configuration
+.env
+*.env
+
+# Secrets and credentials
+*.pem
+*.key
+*.crt
+*id_rsa*
+credentials/
+secrets/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS/editor files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Temporary files
+*.tmp
+*.log

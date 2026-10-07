@@ -1,0 +1,45 @@
+---
+- name: Deploy LEMP Application
+  hosts: lemp
+  become: true
+  gather_facts: false
+
+  vars:
+    app_source: "{{ playbook_dir }}/../../../application"
+    app_destination: /srv/veriqta-portal
+
+  tasks:
+
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "{{ app_destination }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: "0755"
+
+    - name: Deploy application files
+      ansible.builtin.copy:
+        src: "{{ app_source }}/"
+        dest: "{{ app_destination }}/"
+        owner: www-data
+        group: www-data
+        mode: "0644"
+        directory_mode: "0755"
+
+    - name: Ensure Nginx is running
+      ansible.builtin.systemd:
+        name: "{{ nginx_service }}"
+        state: started
+        enabled: true
+
+    - name: Ensure PHP-FPM is running
+      ansible.builtin.systemd:
+        name: "{{ php_fpm_service }}"
+        state: started
+        enabled: true
+
+    - name: Verify application response
+      ansible.builtin.uri:
+        url: "{{ application_url }}"
+        status_code: 200

@@ -1,0 +1,5 @@
+---
+nginx_service: nginx
+php_fpm_service: php8.3-fpm
+database_service: mariadb
+application_url: http://localhost/

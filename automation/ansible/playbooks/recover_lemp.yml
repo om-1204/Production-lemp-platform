@@ -1,0 +1,38 @@
+---
+- name: Recover LEMP Platform Services
+  hosts: lemp
+  become: true
+  gather_facts: false
+
+  tasks:
+
+    - name: Ensure Nginx is running
+      ansible.builtin.systemd:
+        name: "{{ nginx_service }}"
+        state: started
+      register: nginx_recovery
+
+    - name: Ensure PHP-FPM is running
+      ansible.builtin.systemd:
+        name: "{{ php_fpm_service }}"
+        state: started
+      register: php_recovery
+
+    - name: Ensure MariaDB is running
+      ansible.builtin.systemd:
+        name: "{{ database_service }}"
+        state: started
+      register: mariadb_recovery
+
+    - name: Verify application response
+      ansible.builtin.uri:
+        url: "{{ application_url }}"
+        status_code: 200
+
+    - name: Display recovery result
+      ansible.builtin.debug:
+        msg:
+          - "Nginx recovery: {{ nginx_recovery.changed }}"
+          - "PHP-FPM recovery: {{ php_recovery.changed }}"
+          - "MariaDB recovery: {{ mariadb_recovery.changed }}"
+          - "Application: HTTP 200"
