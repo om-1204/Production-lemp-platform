@@ -632,7 +632,7 @@ claiming they are already implemented.
 
 # 👨‍💻 Author
 
-**Om Girish Gaddapwar**
+**Om Gaddapwar**
 
 Linux / DevOps / SRE-focused engineer
 
